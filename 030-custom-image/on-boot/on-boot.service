@@ -1,0 +1,14 @@
+[Unit]
+Description=on-boot initialization
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/on-boot/on-boot.sh
+TimeoutStartSec=0
+
+[Install]
+# ensure the on-boot runs before cloud-init or other things it configures
+# https://askubuntu.com/questions/1024916/how-can-i-launch-a-systemd-service-at-startup-before-another-systemd-service-sta
+# https://www.freedesktop.org/software/systemd/man/systemd.unit.html#Mapping%20of%20unit%20properties%20to%20their%20inverses
+WantedBy=default.target cloud-init-local.service cloud-init.service cloud-final.service logdna-agent.service

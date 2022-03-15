@@ -1,0 +1,13 @@
+local.env
+
+# terraform
+*.tfstate*
+*.terraform*
+secrets-create.json
+
+# packer
+ssh_keys
+hosts
+packerlog.txt
+imagename.txt
+output.json
