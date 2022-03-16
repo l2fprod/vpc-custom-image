@@ -7,7 +7,7 @@ echo "on-boot initialization!"
 
 # token to talk to meta data service
 echo "Retrieving instance identity token..."
-export IBMCLOUD_CR_TOKEN=$(curl -X PUT "http://169.254.169.254/instance_identity/v1/token?version=2022-02-15" \
+export IBMCLOUD_CR_TOKEN=$(curl -X PUT "http://169.254.169.254/instance_identity/v1/token?version=2022-03-08" \
   -H "Metadata-Flavor: ibm" \
   -H "Accept: application/json" \
   -d '{ "expires_in": 300 }' | jq -r '.access_token' \
@@ -15,7 +15,7 @@ export IBMCLOUD_CR_TOKEN=$(curl -X PUT "http://169.254.169.254/instance_identity
 
 # trusted profile configured during instance creation
 echo "Retrieving instance default trusted profile id..."
-export IBMCLOUD_CR_PROFILE=$(curl -X GET "http://169.254.169.254/metadata/v1/instance/initialization?version=2022-03-01" \
+export IBMCLOUD_CR_PROFILE=$(curl -X GET "http://169.254.169.254/metadata/v1/instance/initialization?version=2022-03-08" \
   -H "Authorization: Bearer $IBMCLOUD_CR_TOKEN" | \
   jq -r .default_trusted_profile.target.id \
 )

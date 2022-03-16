@@ -37,7 +37,8 @@ To try this sample, you will need the latest versions of:
    yes yes | ./doit.sh apply
    ```
 1. From there you can `ssh` to the sample virtual server
-   1. Check the content of `/etc/logdna.env`, it should have the Log Analysis host and access key.
+   1. `ssh root@$(cd 040-create-instance && terraform output -raw ip)`
+   1. Check the content of `/etc/logdna.env`, it should have the Log Analysis host and ingestion key.
    1. Check your Log Analysis dashboard for logs coming from the virtual server.
 1. To remove all resources, including the custom image:
    ```
