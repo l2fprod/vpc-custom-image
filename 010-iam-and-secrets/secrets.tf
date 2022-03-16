@@ -4,13 +4,22 @@ variable "existing_secrets_manager_id" {
 variable "existing_log_analysis_crn" {
 }
 
+variable "existing_monitoring_crn" {
+}
+
 resource "ibm_resource_key" "logging_key" {
   name                 = "${var.basename}-logging-key"
   role                 = "Manager"
   resource_instance_id = var.existing_log_analysis_crn
 }
 
-resource "null_resource" "secrets_create" {
+resource "ibm_resource_key" "monitoring_key" {
+  name                 = "${var.basename}-monitoring-key"
+  role                 = "Manager"
+  resource_instance_id = var.existing_monitoring_crn
+}
+
+resource "null_resource" "secrets" {
 
   triggers = {
     APIKEY                = var.ibmcloud_api_key
@@ -18,6 +27,8 @@ resource "null_resource" "secrets_create" {
     SECRETS_MANAGER_ID    = var.existing_secrets_manager_id
     LOGGING_INGESTION_KEY = ibm_resource_key.logging_key.credentials.ingestion_key
     LOGGING_LOGS_HOST     = "logs.${var.region}.logging.cloud.ibm.com"
+    MONITORING_ACCESS_KEY = ibm_resource_key.monitoring_key.credentials["Sysdig Access Key"]
+    MONITORING_HOST       = "ingest.private.${var.region}.monitoring.cloud.ibm.com"
   }
 
   provisioner "local-exec" {
@@ -28,6 +39,8 @@ resource "null_resource" "secrets_create" {
       SECRETS_MANAGER_ID    = self.triggers.SECRETS_MANAGER_ID
       LOGGING_INGESTION_KEY = nonsensitive(ibm_resource_key.logging_key.credentials.ingestion_key)
       LOGGING_LOGS_HOST     = "logs.${var.region}.logging.cloud.ibm.com"
+      MONITORING_ACCESS_KEY = nonsensitive(ibm_resource_key.monitoring_key.credentials["Sysdig Access Key"])
+      MONITORING_HOST       = "ingest.private.${var.region}.monitoring.cloud.ibm.com"
     }
   }
 
@@ -43,11 +56,11 @@ resource "null_resource" "secrets_create" {
 }
 
 data "local_file" "secrets" {
-  filename = "./secrets-create.json"
+  filename = "./secrets.json"
 
-  depends_on = [null_resource.secrets_create]
+  depends_on = [null_resource.secrets]
 }
 
 locals {
-  secrets_create = jsondecode(data.local_file.secrets.content)
+  secrets = jsondecode(data.local_file.secrets.content)
 }

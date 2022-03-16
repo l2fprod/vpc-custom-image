@@ -36,10 +36,18 @@ To try this sample, you will need the latest versions of:
    ```
    yes yes | ./doit.sh apply
    ```
-1. From there you can `ssh` to the sample virtual server
-   1. `ssh root@$(cd 040-create-instance && terraform output -raw ip)`
-   1. Check the content of `/etc/logdna.env`, it should have the Log Analysis host and ingestion key.
-   1. Check your Log Analysis dashboard for logs coming from the virtual server.
+
+At this stage, the script created a custom image and a new virtual server instance from this image. Terraform outputs the public IP address of the instance.
+
+1. `ssh` to the sample virtual server
+   ```
+   ssh root@$(cd 040-create-instance && terraform output -raw ip)
+   ```
+1. Check the content of `/etc/logdna.env` to find the Log Analysis agent host and ingestion key.
+1. Check the content of `/opt/draios/etc/dragent.yaml` to find the Monitoring agent host and access key.
+1. Open the dashboard of your Log Analysis instance to view logs coming from the virtual server.
+1. Open the dashboard of your Monitoring instance and look under **Dashboard Templates / Host Infrastructure / 
+Sysdig Agent Health & Status** to view data about the deployed agent. You can also explore the other dashboards under Host Infrastructure. Make sure you set the **hostname** in the scope to the created virtual server.
 1. To remove all resources, including the custom image:
    ```
    yes yes | ./doit.sh destroy

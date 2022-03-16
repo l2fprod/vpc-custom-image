@@ -54,6 +54,7 @@ yum install -y logdna-agent-3.3.3-1.x86_64
 echo ">> sysdig"
 rpm --import https://download.sysdig.com/DRAIOS-GPG-KEY.public
 curl -s -o /etc/yum.repos.d/draios.repo http://download.sysdig.com/stable/rpm/draios.repo
+yum -y install kernel-devel-$(uname -r)
 yum -y install draios-agent
 
 # tools

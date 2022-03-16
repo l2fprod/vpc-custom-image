@@ -81,6 +81,10 @@ resource "ibm_is_floating_ip" "fip" {
   target = ibm_is_instance.instance.primary_network_interface[0].id
 }
 
+output "hostname" {
+  value = ibm_is_instance.instance.name
+}
+
 output "ip" {
   value = ibm_is_floating_ip.fip.address
 }
