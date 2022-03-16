@@ -1,3 +1,4 @@
+# This service will run during the initialization sequence of a virtual server instance
 [Unit]
 Description=on-boot initialization
 After=network.target
