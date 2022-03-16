@@ -1,14 +1,16 @@
 # A sample VPC custom image built with Packer
 
+This example uses Packer to create a custom image and to provision a new virtual server instance from the custom image.
+
 ![alt](./xdocs/architecture.png)
 
 ## Before you begin
 
 To try this sample, you will need the latest versions of:
-- `packer`
-- `terraform`
-- `ibmcloud` CLI and `secrets-manager` plugin.
-- or you can use the pre-built `l2fprod/ibmcloud-ci` image found in Docker Hub -- it has all required tools pre-installed.
+- [`packer`](https://www.packer.io/downloads)
+- [`terraform`](https://www.terraform.io/downloads)
+- [`ibmcloud`](https://cloud.ibm.com/docs/cli?topic=cli-getting-started) CLI and [`secrets-manager`](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-cli-plugin-secrets-manager-cli) plugin.
+- or you can use the pre-built [`l2fprod/ibmcloud-ci`](https://github.com/l2fprod/ibmcloud-ci) image found in Docker Hub -- it has all required tools pre-installed.
 
 ## Build custom image and create new instance
 
@@ -34,7 +36,9 @@ To try this sample, you will need the latest versions of:
    ```
    yes yes | ./doit.sh apply
    ```
-1. From there you can `ssh` to the sample virtual server and also check Log Analysis for logs coming from the virtual server.
+1. From there you can `ssh` to the sample virtual server
+   1. Check the content of `/etc/logdna.env`, it should have the Log Analysis host and access key.
+   1. Check your Log Analysis dashboard for logs coming from the virtual server.
 1. To remove all resources, including the custom image:
    ```
    yes yes | ./doit.sh destroy
