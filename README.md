@@ -12,6 +12,10 @@ To try this sample, you will need the latest versions of:
 
 ## Build custom image and create new instance
 
+1. Make sure you have one instance of the following services in the region where you plan to create resources:
+   * [Secrets Manager](https://cloud.ibm.com/catalog/services/secrets-manager)
+   * [Log Analysis](https://cloud.ibm.com/catalog/services/logdna)
+   * [Monitoring](https://cloud.ibm.com/catalog/services/sysdig-monitor)
 1. Copy template.local.env to local.env:
    ```
    cp template.local.env local.env
