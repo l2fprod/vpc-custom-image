@@ -30,7 +30,7 @@ locals {
   image_name = var.image_name == "" ? "packer-${local.timestamp}" : var.image_name
 }
 
-source "ibmcloud-vpc" "centos" {
+source "ibmcloud-vpc" "instance" {
   api_key = var.ibmcloud_api_key
   region  = var.region
 
@@ -55,7 +55,7 @@ source "ibmcloud-vpc" "centos" {
 
 build {
   sources = [
-    "source.ibmcloud-vpc.centos"
+    "source.ibmcloud-vpc.instance"
   ]
 
   provisioner "shell" {
