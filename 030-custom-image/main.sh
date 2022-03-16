@@ -5,6 +5,7 @@ if [[ "$1" == "clean" ]]; then
   exit 0
 fi
 
+# initialize variable used by the Packer build
 export PKR_VAR_ibmcloud_api_key=$TF_VAR_ibmcloud_api_key
 export PKR_VAR_region=$TF_VAR_region
 export PKR_VAR_image_name=$(cd ../020-prepare-custom-image && terraform output -raw basename)-image-$(date +%Y-%m-%d-%H-%M-%S.%N)

@@ -6,13 +6,17 @@
 # LOGGING_LOGS_HOST=
 set -e -o pipefail
 
+# use IBM Cloud CLI to interact with Secrets Manager
 ibmcloud login --apikey $APIKEY -r $REGION
 ibmcloud plugin install secrets-manager -f
 
+# retrieve the URL of the Secrets Manager instance
 secrets_manager_json=$(ibmcloud resource service-instance $SECRETS_MANAGER_ID --output json | jq '.[0]')
 secrets_manager_url=https://$(echo $secrets_manager_json | jq -r '.extensions.virtual_private_endpoints | .dns_hosts[0]').${REGION}.secrets-manager.appdomain.cloud
 echo "Secrets Manager URL is $secrets_manager_url"
 
+# create a secret group
+echo "Creating a secret group..."
 secret_group_json=$(\
 ibmcloud secrets-manager secret-group-create \
   --metadata='{
@@ -29,7 +33,10 @@ ibmcloud secrets-manager secret-group-create \
   --service-url $secrets_manager_url \
 )
 secret_group_id=$(echo $secret_group_json | jq -r .resources[0].id)
+echo "Secret group ID is $secret_group_id"
 
+# create a secret
+echo "Creating logging secret..."
 logging_secret_json=$(\
 ibmcloud secrets-manager secret-create \
   --secret-type kv \
@@ -48,7 +55,9 @@ ibmcloud secrets-manager secret-create \
   --service-url $secrets_manager_url \
 )
 logging_secret_id=$(echo $logging_secret_json | jq -r .resources[0].id)
+echo "Logging secret ID is $logging_secret_id"
 
+# write down output in a format than can be consumed by terraform
 echo '{
   "secret_group_id": "'$secret_group_id'",
   "logging_secret_id": "'$logging_secret_id'"
