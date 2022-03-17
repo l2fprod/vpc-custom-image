@@ -39,10 +39,7 @@ To try this sample, you will need the latest versions of:
 
 At this stage, the script created a custom image and a new virtual server instance from this image. Terraform outputs the public IP address of the instance.
 
-1. `ssh` to the sample virtual server
-   ```
-   ssh root@$(cd 040-create-instance && terraform output -raw ip)
-   ```
+1. From your local machine (outside of the Docker container so `ssh` can retrieve your key), `ssh` to the sample virtual server using the IP address shown in the output, e.g `ssh root@123.45.67.89`
 1. Check the content of `/etc/logdna.env` to find the Log Analysis agent host and ingestion key.
 1. Check the content of `/opt/draios/etc/dragent.yaml` to find the Monitoring agent host and access key.
 1. Open the dashboard of your Log Analysis instance to view logs coming from the virtual server.
