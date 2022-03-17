@@ -88,3 +88,7 @@ output "hostname" {
 output "ip" {
   value = ibm_is_floating_ip.fip.address
 }
+
+output "ssh" {
+  value = "ssh root@${ibm_is_floating_ip.fip.address}"
+}
