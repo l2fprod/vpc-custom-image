@@ -50,7 +50,7 @@ source "ibmcloud-vpc" "instance" {
   ssh_port     = 22
   ssh_timeout  = "15m"
 
-  timeout = "30m"
+  timeout = "60m"
 }
 
 build {
