@@ -25,6 +25,7 @@ To try this sample, you will need the latest versions of:
 1. Edit `local.env` to match your environment. Use a unique basename name, e.g. by including the date.
 1. (Recommended) Use the following Docker image to run the scripts.
    ```
+   docker pull l2fprod/ibmcloud-ci
    docker run -it --volume $PWD:/app --workdir /app l2fprod/ibmcloud-ci
    ```
    > Note: If running inside of Git Bash on Windows, prefix the above command with MSYS_NO_PATHCONV=1
