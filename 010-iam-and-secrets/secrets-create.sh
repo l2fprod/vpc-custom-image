@@ -21,10 +21,6 @@ echo "Secrets Manager URL is $secrets_manager_url"
 echo "Creating a secret group..."
 secret_group_json=$(\
 ibmcloud secrets-manager secret-group-create \
-  --metadata='{
-    "collection_type": "application/vnd.ibm.secrets-manager.secret.group+json",
-    "collection_total": 1
-  }' \
   --resources='[
     {
       "name": "custom-image-observability",
@@ -42,7 +38,6 @@ echo "Creating logging secret..."
 logging_secret_json=$(\
 ibmcloud secrets-manager secret-create \
   --secret-type kv \
-  --metadata='{"collection_type": "application/vnd.ibm.secrets-manager.config+json", "collection_total": 1}' \
   --resources='[
     {
       "name": "custom-image-logging",
@@ -64,7 +59,6 @@ echo "Creating monitoring secret..."
 monitoring_secret_json=$(\
 ibmcloud secrets-manager secret-create \
   --secret-type kv \
-  --metadata='{"collection_type": "application/vnd.ibm.secrets-manager.config+json", "collection_total": 1}' \
   --resources='[
     {
       "name": "custom-image-monitoring",
