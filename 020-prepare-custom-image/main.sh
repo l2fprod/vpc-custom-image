@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 if [[ "$1" == "apply" ]]; then
   terraform init
   terraform apply
