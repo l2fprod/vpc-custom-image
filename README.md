@@ -57,7 +57,7 @@ Sysdig Agent Health & Status** to view data about the deployed agent. You can al
 | -------------- | ----------- |
 | [010-iam-and-secrets](./010-iam-and-secrets/) | Terraform template to create a trusted profile, secret group and store Log Analysis and Monitoring credentials. |
 | [020-prepare-custom-image](./020-prepare-custom-image/) | Terraform template to create the VPC and subnet required by Packer. |
-| [030-custom-image](./030-custom-image/) | Packer configuration and scripts deployed to the custom image. |
+| [030-custom-image](./030-custom-image/) | Packer configuration and scripts deployed to the custom image. The scripts are specific to the target operating system and would need to be tweaked if you decide to use another operating system. |
 | [040-create-instance](./040-create-instance/) | Terraform template to provision a server instance from the custom image. |
 
 ## License
