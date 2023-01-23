@@ -52,8 +52,11 @@ yum install -y logdna-agent-3.3.3-1.x86_64
 
 # sysdig
 echo ">> sysdig"
+# extracted from https://ibm.biz/install-sysdig-agent
 rpm --import https://download.sysdig.com/DRAIOS-GPG-KEY.public
-curl -s -o /etc/yum.repos.d/draios.repo http://download.sysdig.com/stable/rpm/draios.repo
+curl -s -o /etc/yum.repos.d/draios.repo https://download.sysdig.com/stable/rpm/draios.repo
+rpm --quiet -i https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum -q -y install dkms
 yum -y install kernel-devel-$(uname -r)
 yum -y install draios-agent
 

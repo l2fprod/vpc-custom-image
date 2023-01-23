@@ -19,7 +19,7 @@ variable "subnet_id" {}
 variable "resource_group_id" {}
 variable "security_group_id" { default = "" }
 
-variable "base_image_name" { default = "ibm-rocky-linux-8-5-minimal-amd64-2" }
+variable "base_image_name" { default = "ibm-centos-7-9-minimal-amd64-8" }
 variable "profile" { default = "bx2-2x8" }
 variable "image_name" {
   default = ""
