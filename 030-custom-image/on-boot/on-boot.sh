@@ -26,34 +26,34 @@ echo "Retrieving secret groups..."
 secret_groups_json=$(ibmcloud sm secret-groups --service-url $secrets_manager_url --output json)
 
 # retrieve the id of the "observability" secret group
-observability_group_id=$(echo $secret_groups_json | jq -r '.resources[] | select(.name=="custom-image-observability") | .id')
+observability_group_id=$(echo $secret_groups_json | jq -r '.secret_groups[] | select(.name=="custom-image-observability") | .id')
 echo "Found custom-image-observability group id $observability_group_id"
 
 # retrieve the secrets in the group
 echo "Retrieving secrets from secret group..."
-observability_group_secrets_json=$(ibmcloud sm all-secrets --groups $observability_group_id --service-url $secrets_manager_url  --output json)
+observability_group_secrets_json=$(ibmcloud sm secrets --groups $observability_group_id --service-url $secrets_manager_url  --output json)
 
 # for logging
-logging_secret_id=$(echo $observability_group_secrets_json | jq -r '.resources[] | select(.name=="custom-image-logging") | .id')
+logging_secret_id=$(echo $observability_group_secrets_json | jq -r '.secrets[] | select(.name=="custom-image-logging") | .id')
 echo "logging secret id is $logging_secret_id"
 
 echo "Retrieving logging secret..."
-logging_secret_json=$(ibmcloud sm secret --id $logging_secret_id --secret-type kv --service-url $secrets_manager_url --output json)
+logging_secret_json=$(ibmcloud sm secret --id $logging_secret_id --service-url $secrets_manager_url --output json)
 
 # for monitoring
-monitoring_secret_id=$(echo $observability_group_secrets_json | jq -r '.resources[] | select(.name=="custom-image-monitoring") | .id')
+monitoring_secret_id=$(echo $observability_group_secrets_json | jq -r '.secrets[] | select(.name=="custom-image-monitoring") | .id')
 echo "monitoring secret id is $monitoring_secret_id"
 
 echo "Retrieving monitoring secret..."
-monitoring_secret_json=$(ibmcloud sm secret --id $monitoring_secret_id --secret-type kv --service-url $secrets_manager_url --output json)
+monitoring_secret_json=$(ibmcloud sm secret --id $monitoring_secret_id --service-url $secrets_manager_url --output json)
 
 # configure Log Analysis agent
 # https://github.com/logdna/logdna-agent-v2/blob/3.3/docs/LINUX.md
 echo "Configuring Log Analysis agent..."
 LOGGING_CONFIG_FILE=/etc/logdna.env
 cat > $LOGGING_CONFIG_FILE << EOF
-LOGDNA_HOST=$(echo $logging_secret_json | jq -r '.resources[0].secret_data.payload.log_host')
-LOGDNA_INGESTION_KEY=$(echo $logging_secret_json | jq -r '.resources[0].secret_data.payload.ingestion_key')
+LOGDNA_HOST=$(echo $logging_secret_json | jq -r '.data.log_host')
+LOGDNA_INGESTION_KEY=$(echo $logging_secret_json | jq -r '.data.ingestion_key')
 EOF
 
 echo "Starting Log Analysis agent..."
@@ -63,8 +63,8 @@ systemctl status logdna-agent
 
 echo "Configuring Monitoring agent..."
 MONITORING_CONFIG_FILE=/opt/draios/etc/dragent.yaml
-MONITORING_ACCESS_KEY=$(echo $monitoring_secret_json | jq -r '.resources[0].secret_data.payload.access_key')
-MONITORING_HOST=$(echo $monitoring_secret_json | jq -r '.resources[0].secret_data.payload.host')
+MONITORING_ACCESS_KEY=$(echo $monitoring_secret_json | jq -r '.data.access_key')
+MONITORING_HOST=$(echo $monitoring_secret_json | jq -r '.data.host')
 
 if ! grep ^customerid $MONITORING_CONFIG_FILE > /dev/null 2>&1; then
   echo "customerid: $MONITORING_ACCESS_KEY" >> $MONITORING_CONFIG_FILE

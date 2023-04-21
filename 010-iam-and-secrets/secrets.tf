@@ -19,48 +19,28 @@ resource "ibm_resource_key" "monitoring_key" {
   resource_instance_id = var.existing_monitoring_crn
 }
 
-resource "null_resource" "secrets" {
+resource "ibm_sm_secret_group" "secret_group" {
+  instance_id = var.existing_secrets_manager_id
+  name        = "custom-image-observability"
+  description = "Created by terraform as part of the custom-image example"
+}
 
-  triggers = {
-    APIKEY                = var.ibmcloud_api_key
-    REGION                = var.region
-    SECRETS_MANAGER_ID    = var.existing_secrets_manager_id
-    LOGGING_INGESTION_KEY = ibm_resource_key.logging_key.credentials.ingestion_key
-    LOGGING_LOGS_HOST     = "logs.${var.region}.logging.cloud.ibm.com"
-    MONITORING_ACCESS_KEY = ibm_resource_key.monitoring_key.credentials["Sysdig Access Key"]
-    MONITORING_HOST       = "ingest.private.${var.region}.monitoring.cloud.ibm.com"
-  }
-
-  provisioner "local-exec" {
-    command = "./secrets-create.sh"
-    environment = {
-      APIKEY                = self.triggers.APIKEY
-      REGION                = self.triggers.REGION
-      SECRETS_MANAGER_ID    = self.triggers.SECRETS_MANAGER_ID
-      LOGGING_INGESTION_KEY = nonsensitive(ibm_resource_key.logging_key.credentials.ingestion_key)
-      LOGGING_LOGS_HOST     = "logs.${var.region}.logging.cloud.ibm.com"
-      MONITORING_ACCESS_KEY = nonsensitive(ibm_resource_key.monitoring_key.credentials["Sysdig Access Key"])
-      MONITORING_HOST       = "ingest.private.${var.region}.monitoring.cloud.ibm.com"
-    }
-  }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = "./secrets-destroy.sh"
-    environment = {
-      APIKEY             = self.triggers.APIKEY
-      REGION             = self.triggers.REGION
-      SECRETS_MANAGER_ID = self.triggers.SECRETS_MANAGER_ID
-    }
+resource "ibm_sm_kv_secret" "logging" {
+  instance_id = var.existing_secrets_manager_id
+  name = "custom-image-logging"
+  secret_group_id = ibm_sm_secret_group.secret_group.secret_group_id
+  data = {
+    log_host = "logs.${var.region}.logging.cloud.ibm.com"
+    ingestion_key = ibm_resource_key.logging_key.credentials.ingestion_key
   }
 }
 
-data "local_file" "secrets" {
-  filename = "./secrets.json"
-
-  depends_on = [null_resource.secrets]
-}
-
-locals {
-  secrets = jsondecode(data.local_file.secrets.content)
+resource "ibm_sm_kv_secret" "monitoring" {
+  instance_id = var.existing_secrets_manager_id
+  name = "custom-image-monitoring"
+  secret_group_id = ibm_sm_secret_group.secret_group.secret_group_id
+  data = {
+    host = "ingest.private.${var.region}.monitoring.cloud.ibm.com",
+    access_key = ibm_resource_key.monitoring_key.credentials["Sysdig Access Key"]
+  }
 }

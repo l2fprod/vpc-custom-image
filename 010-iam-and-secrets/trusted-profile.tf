@@ -21,7 +21,7 @@ resource "ibm_iam_trusted_profile_policy" "view_secret_group" {
     service              = "secrets-manager"
     resource_instance_id = var.existing_secrets_manager_id
     resource_type        = "secret-group"
-    resource             = local.secrets.secret_group_id
+    resource             = ibm_sm_secret_group.secret_group.secret_group_id
   }
 }
 

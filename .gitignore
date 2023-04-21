@@ -3,7 +3,6 @@ local.env
 # terraform
 *.tfstate*
 *.terraform*
-secrets.json
 
 # packer
 ssh_keys
