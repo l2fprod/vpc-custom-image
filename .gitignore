@@ -10,3 +10,6 @@ hosts
 packerlog.txt
 imagename.txt
 output.json
+
+id_rsa
+id_rsa.pub
