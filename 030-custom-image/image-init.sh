@@ -29,7 +29,6 @@ for plugin in "${ibmcloud_plugins[@]}"
 do
   ibmcloud plugin install $plugin -f -r "IBM Cloud"
 done
-ibmcloud cf install --force
 ibmcloud config --check-version=false
 
 # jq
