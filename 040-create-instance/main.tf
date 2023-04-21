@@ -56,8 +56,11 @@ resource "ibm_is_instance" "instance" {
   name                           = "${data.terraform_remote_state.vpc.outputs.basename}-test"
   image                          = data.ibm_is_image.image.id
   profile                        = "bx2-2x8"
-  metadata_service_enabled       = true
   default_trusted_profile_target = data.terraform_remote_state.iam.outputs.trusted_profile_id
+
+  metadata_service {
+    enabled = true
+  }
 
   vpc            = data.terraform_remote_state.vpc.outputs.vpc.id
   zone           = "${var.region}-1"
