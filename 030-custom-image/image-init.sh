@@ -38,6 +38,7 @@ yum install -y jq
 
 # logdna
 echo ">> log analysis agent"
+# extracted from https://cloud.ibm.com/docs/log-analysis?topic=log-analysis-config_agent_rhel3
 rpm --import https://assets.logdna.com/logdna.gpg
 echo "[logdna]
 name=LogDNA packages
